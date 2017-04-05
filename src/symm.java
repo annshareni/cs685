@@ -6,7 +6,7 @@ public class symm {
 	
 	public final String base_array = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	public final String base_1 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	private final String KEY = "VIGENERECIPHER";
+	private String KEY ;//= "VIGENERECIPHER";
 	private String cypherText;
 	private String plainText ;
 
@@ -38,7 +38,13 @@ public class symm {
 		
 	}
 	
-	
+	public String getKEY() {
+		return KEY;
+	}
+
+	public void setKEY(String kEY) {
+		KEY = kEY.toUpperCase();
+	}
 
 	public void Encode(){
 		
@@ -85,13 +91,24 @@ public class symm {
 				if (jj > (KEY.length()-1 ))
 					jj=0;
 				
-				char[] t = matrix[base_1.indexOf(KEY.indexOf(jj))] ;//row is the line of the matrix
-				String row = toString().toString();
-				jj = jj+1; 
-				int col = row.indexOf(ch) ; //colum number
-
-				char plainChar = base_1.charAt(col) ;// get the decrypted letter in map
+				char[] row = new char[26]; 
 				
+				
+				row = matrix[base_1.indexOf( KEY.charAt(jj) )] ;//row is the line of the matrix
+				
+				jj = jj+1; 
+				int col = 0; 
+				for(int ii=0; ii< 26; ii++) {
+					if(row[ii] == ch)
+						col = ii;
+					
+				}
+				
+				
+
+				char temp = base_1.charAt(col) ;// get the decrypted letter in map
+				
+				String plainChar = String.valueOf(temp);
 				PlainText= PlainText+ plainChar;
 
 				
@@ -100,6 +117,8 @@ public class symm {
 			}
 			
 		}
+		
+		setPlainText(PlainText);
 		
 	
 	}// end decode
@@ -120,6 +139,21 @@ public class symm {
 	public void setPlainText(String plainText) {
 		this.plainText = plainText;
 	}
+	
+	 /*public static void main(String args[])
+    {
+       symm s = new symm();
+       s.setInputMessage("jj");
+       s.Encode();
+       System.out.println(s.getCypherText());
+       s.setInputMessage(" ER");
+       s.Decode();
+       System.out.println(s.getPlainText());
+       
+		 
+    }
+    */
+    
 	
 
 }// end class
