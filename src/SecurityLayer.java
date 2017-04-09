@@ -11,15 +11,59 @@ import java.lang.String;
  */
 public class SecurityLayer implements ISecurityLayer{
 
+    private final String encryptionKey = "cs685AESKeyUsage";
+    
     @Override
-    public String EncryptWithAES_256(String plainText) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String EncryptWithAES_256(String plainText){
+        
+        System.out.println((encryptionKey).getBytes().length);
+        System.out.println("input is "+plainText);
+        try
+        {
+            Cipher cipher = Cipher.getInstance("AES");
+            byte[] key = encryptionKey.getBytes("UTF-8");
+            SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+            
+            cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
+            
+            byte[] inputBytes = plainText.getBytes();     
+            byte[] outputBytes = cipher.doFinal(inputBytes);
+            
+            String outPut = outputBytes.toString();
+            System.out.println("outPut is: "+outPut);
+            
+            return java.util.Base64.getEncoder().encodeToString(outputBytes);
+            //Base64Utils.encodeToString(outputBytes);
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error in EncryptWithAES!\n " + e.getMessage() + "\n");
+            return null;
+        }
     }
 
     @Override
     public String DecryptWithAES_256(String cypherText) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try{
+            Cipher dcipher = Cipher.getInstance("AES");
+            dcipher = Cipher.getInstance("AES");
+            byte[] key = encryptionKey.getBytes("UTF-8");
+            
+            SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
+            
+            dcipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+            
+            byte[] dec =java.util.Base64.getDecoder().decode(cypherText.getBytes());
+            byte[] utf8 = dcipher.doFinal(dec);
+
+            return new String(utf8, "UTF8");
+        }
+        catch (Exception e){
+            System.err.println("Error in EncryptWithAES!\n " + e.getMessage() + "\n");
+            return null;
+        }
     }
+
 
     @Override
     public String DigitalSign(String Message) {
