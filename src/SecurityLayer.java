@@ -12,6 +12,7 @@ public class SecurityLayer implements ISecurityLayer{
 
     private final String symmetricKey = "cs685AESKeyUsage";
     
+    
     @Override
     public String EncryptWithAES_256(String plainText){
         
@@ -29,7 +30,6 @@ public class SecurityLayer implements ISecurityLayer{
             byte[] outputBytes = cipher.doFinal(inputBytes);
             
             return java.util.Base64.getEncoder().encodeToString(outputBytes);
-            //Base64Utils.encodeToString(outputBytes);
         }
         catch (Exception e)
         {
@@ -38,6 +38,7 @@ public class SecurityLayer implements ISecurityLayer{
         }
     }
 
+    
     @Override
     public String DecryptWithAES_256(String cypherText) {
         try{
@@ -58,8 +59,8 @@ public class SecurityLayer implements ISecurityLayer{
         }
     }
 
-
-
+    
+    
     @Override
     public String DigitalSign(String Message) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -70,14 +71,32 @@ public class SecurityLayer implements ISecurityLayer{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+
     @Override
-    public String HashWithSha1_256(String Message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String HashWithSha1_512(String Message) {
+        
+        //try block written by Daniel Davis
+        try
+        {
+            MessageDigest sha = MessageDigest.getInstance("SHA-512");
+            sha.update(Message.getBytes());
+            byte[] hashed = sha.digest();
+            
+            return java.util.Base64.getEncoder().encodeToString(hashed);
+        } 
+        catch (Exception e) 
+        {
+            System.err.println("Error in hashing! " + e.getMessage() + "!");
+        }
+        
+        return null;
     }
 
     @Override
-    public boolean VerifyHashSha1_256(String MessageToCheck, String HashToCompare) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean VerifyHashSha1_512(String MessageToCheck, String HashToCompare) {
+        
+        String hashForCompare = HashWithSha1_512(MessageToCheck);
+        return hashForCompare.equals(HashToCompare);
     }
 
 
