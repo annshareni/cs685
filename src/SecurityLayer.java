@@ -71,7 +71,7 @@ public class SecurityLayer implements ISecurityLayer{
     }
 
     @Override
-    public String HashWithSha1_256(String Message, String HashKey) {
+    public String HashWithSha1_256(String Message) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
