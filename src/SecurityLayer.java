@@ -1,8 +1,8 @@
 package cs685;
 
 import java.security.*;
-import javax.crypto.*;
-import java.lang.String;
+import javax.crypto.spec.SecretKeySpec;
+import javax.crypto.Cipher;
 
 
 /**
