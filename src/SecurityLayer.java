@@ -29,9 +29,6 @@ public class SecurityLayer implements ISecurityLayer{
             byte[] inputBytes = plainText.getBytes();     
             byte[] outputBytes = cipher.doFinal(inputBytes);
             
-            String outPut = outputBytes.toString();
-            System.out.println("outPut is: "+outPut);
-            
             return java.util.Base64.getEncoder().encodeToString(outputBytes);
             //Base64Utils.encodeToString(outputBytes);
         }
