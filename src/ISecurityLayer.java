@@ -38,7 +38,7 @@ public interface ISecurityLayer {
     * @return hash resulting from the decryption. Will be Null if hash failed. 
     * @author James
     */
-    public String HashWithSha1_256(String Message, String HashKey);
+    public String HashWithSha1_256(String Message);
     
     /**
     * @return true if hash of first parameter is equal to second parameter
