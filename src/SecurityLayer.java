@@ -4,24 +4,23 @@ import java.security.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.Cipher;
 
-
 /**
  *
  * @author James
  */
 public class SecurityLayer implements ISecurityLayer{
 
-    private final String encryptionKey = "cs685AESKeyUsage";
+    private final String symmetricKey = "cs685AESKeyUsage";
     
     @Override
     public String EncryptWithAES_256(String plainText){
         
-        System.out.println((encryptionKey).getBytes().length);
+        System.out.println((symmetricKey).getBytes().length);
         System.out.println("input is "+plainText);
         try
         {
             Cipher cipher = Cipher.getInstance("AES");
-            byte[] key = encryptionKey.getBytes("UTF-8");
+            byte[] key = symmetricKey.getBytes("UTF-8");
             SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
             
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
@@ -42,24 +41,23 @@ public class SecurityLayer implements ISecurityLayer{
     @Override
     public String DecryptWithAES_256(String cypherText) {
         try{
-            Cipher dcipher = Cipher.getInstance("AES");
-            dcipher = Cipher.getInstance("AES");
-            byte[] key = encryptionKey.getBytes("UTF-8");
-            
+            Cipher decryptObject = Cipher.getInstance("AES");
+            byte[] key = symmetricKey.getBytes("UTF-8");
             SecretKeySpec secretKeySpec = new SecretKeySpec(key, "AES");
             
-            dcipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
+            decryptObject.init(Cipher.DECRYPT_MODE, secretKeySpec);
             
-            byte[] dec =java.util.Base64.getDecoder().decode(cypherText.getBytes());
-            byte[] utf8 = dcipher.doFinal(dec);
+            byte[] bytesToDecrypt = java.util.Base64.getDecoder().decode(cypherText.getBytes());
+            byte[] DecryptedBytes = decryptObject.doFinal(bytesToDecrypt);
 
-            return new String(utf8, "UTF8");
+            return new String(DecryptedBytes, "UTF8");
         }
         catch (Exception e){
-            System.err.println("Error in EncryptWithAES!\n " + e.getMessage() + "\n");
+            System.err.println("Error in DecryptWithAES!\n " + e.getMessage() + "\n");
             return null;
         }
     }
+
 
 
     @Override
