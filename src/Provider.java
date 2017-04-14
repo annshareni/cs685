@@ -1,4 +1,4 @@
-package cs685;
+
 
 import java.io.*;
 import java.net.*;
@@ -10,6 +10,7 @@ public class Provider{
     ObjectOutputStream out;
     ObjectInputStream in;
     String message;
+    String handshake;
     JTextField txtNew;
     
     //Socket clientSocket;
@@ -24,7 +25,7 @@ public class Provider{
     {
         try{
             //1. creating a server socket
-            providerSocket = new ServerSocket(2004, 10);
+            providerSocket = new ServerSocket(2005, 10);
             //2. Wait for connection
             System.out.println("I am server Waiting for connection(listen on port 2004)");
             connection = providerSocket.accept();
@@ -37,33 +38,33 @@ public class Provider{
             //4. The two parts communicate via the input and output streams
             do{
                 try{
-                    message = (String)in.readObject();
+                	handshake = (String)in.readObject();
+                	if (handshake.equals("bye")) {
+                        sendMessage("bye");}
+                	else {
+                    message = handshake;
                     System.out.println("client>" + message);
-                    
-                    if(message.charAt(0)=='0') { // symmetric algorithm
-            			//s = new symm();
-            			int endIndex = message.length();
-            			String in_m = message.substring(1, endIndex);
-            			System.out.println(in_m);
-            			System.out.println(in_m.length());
-            			s.setInputMessage(in_m);
-            			//s.Decode();
-            			txtNew.setText("new message! ");
-            			
-            			
-            		}else if (message.charAt(0)=='1') { // Asymmetric algorithm
-            			
-            		}
+                    s.setToCompare(message);
+                    s.setIntegrity();
+                    System.out.println(s.isIntegrity());
+                    txtNew.setText("new message! ");
+                    if (s.isIntegrity()) {
+                    	System.out.println(s.getMessageToCheck());
+                    	s.inputMessage = s.getMessageToCheck();
+             	
+                    }
+                    	
+                    }
                     
                     
                     
-                    if (message.equals("bye"))
-                        sendMessage("bye");
+                    
+                    
                 }
                 catch(ClassNotFoundException classnot){
                     System.err.println("Data received in unknown format");
                 }
-            }while(!message.equals("bye"));
+            }while(!handshake.equals("bye"));
         }
         catch(IOException ioException){
             ioException.printStackTrace();

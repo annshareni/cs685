@@ -1,4 +1,4 @@
-package cs685;
+
 
 
 import java.io.*;
@@ -17,7 +17,7 @@ public class Requester{
     {
         try{
             //1. creating a socket to connect to the server
-            requestSocket = new Socket("192.168.0.104", 2004);
+            requestSocket = new Socket("192.168.0.103", 2004);
             System.out.println("I am client Connected to localhost in port 2004, I am initiate message");
             //2. get Input and Output streams
             out = new ObjectOutputStream(requestSocket.getOutputStream());
@@ -28,7 +28,7 @@ public class Requester{
                 try{
                     message = (String)in.readObject();
                     System.out.println("server>" + message);
-                    String outline ="0 "+s.getCypherText();
+                    String outline =s.getAlgorithm()+s.getHash()+s.getCypherText();
                     sendMessage(outline);
                     message = "bye";
                     sendMessage(message);

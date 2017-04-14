@@ -1,4 +1,4 @@
-package cs685;
+
 
 
 
@@ -47,7 +47,7 @@ public class demo1 {
 	private JTextField textField;
 	private JTextField textField_1;
 	
-
+	static int select=-1;
 	/**
 	 * Launch the application.
 	 * @throws IOException 
@@ -91,6 +91,7 @@ public class demo1 {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		
 		frame = new JFrame();
 		frame.setBounds(100, 100, 641, 300);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -106,7 +107,7 @@ public class demo1 {
 		
 	
 			
-		 textArea_1 = new JTextArea(); // message to take in 
+		textArea_1 = new JTextArea(); // message to take in 
 		textArea_1.setBounds(6, 162, 223, 66);
 		panel.add(textArea_1);
 		
@@ -124,16 +125,25 @@ public class demo1 {
 			public void mouseClicked(MouseEvent arg0) {
 				String t = textArea.getText();
 				s.setInputMessage(t);
-				int select = comboBox.getSelectedIndex();
-				//if (select ==0) {
+				select = comboBox.getSelectedIndex();
+				s.setAlgorithm(String.valueOf(select));
+				
+				if (select ==0) {
+					//lblNewLabel_3.setText("Type Key Here:");
+					s.Encode();
+					s.HashWithSha1_512(s.getCypherText());
+					textField.setText("Ready to Send");
 					
+				}else if (select == 1 ){
+					s.EncryptWithAES_256();
+					s.HashWithSha1_512(s.getCypherText());
+					textField.setText("Ready to Send");
+				}else if (select == 2 ) {
 					
-				//}else if (select == 1 ){
+				}else if (select == 3 ) {
 					
-				//}else {
-					
-				//}
-				lblNewLabel_3.setText("Type Key Here:");
+				}
+				
 				
 				
 			
@@ -149,7 +159,22 @@ public class demo1 {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				messageCount--;
-				label.setText("Type Key Here");
+				txtNew.setText("");
+				if (s.isIntegrity()) {
+					//System.out.println(s.getAlgorithm());
+					if(s.getAlgorithm().equals("0")) {
+						//label.setText("Type Key Here");
+						s.Decode();
+						textField_1.setText("Ready to show");
+					}else if(s.getAlgorithm().equals("1")) {
+						s.DecryptWithAES_256();
+						textField_1.setText("Ready to show");
+						
+					}
+				}else {
+					textArea_1.setText("Hash doesn't match!");
+				}
+				
 				//textArea_1.setText(s.getPlainText());
 			}
 		});// end receive message handler
@@ -208,7 +233,7 @@ public class demo1 {
 		
 		
 		comboBox = new JComboBox<String>();
-		comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"Vigenère cipher", "Public key based"}));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] {"Vigenère", "AES 256", "RSA 2048", "Signature"}));
 		comboBox.setToolTipText("");
 		comboBox.setBounds(257, 29, 177, 38);
 		panel.add(comboBox);
@@ -242,18 +267,33 @@ public class demo1 {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				if(!textField.getText().isEmpty()) {
-				String key = textField.getText();
-				s.setKEY(key);
-				
-				s.Encode();
 				messageCount++; 
 				Requester client = new Requester(s);
 		        client.run();
-				}else {
+				/*if (select == 0) {
 					
-					lblNewLabel_3.setForeground(Color.RED);
-				}
+					if(!textField.getText().isEmpty()) {
+						String key = textField.getText();
+						s.setKEY(key);
+						
+						s.Encode();
+						s.HashWithSha1_512(s.getCypherText());
+						messageCount++; 
+						Requester client = new Requester(s);
+				        client.run();
+						}else {
+							
+							lblNewLabel_3.setForeground(Color.RED);
+						}
+					
+				} else {
+					messageCount++; 
+					Requester client = new Requester(s);
+			        client.run();
+				}*/
+				
+				
+				
 			}
 		});
 		btnSend.setBounds(439, 72, 70, 33);
@@ -263,17 +303,26 @@ public class demo1 {
 		btnShow.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(!textField_1.getText().isEmpty()) {
-					String key = textField_1.getText();
-					s.setKEY(key);
-					
-					s.Decode();
-					textArea_1.setText(s.getPlainText());
-					
-					}else {
+				
+				/*if (s.getAlgorithm().equals("0")){
+					if(!textField_1.getText().isEmpty()) {
+						String key = textField_1.getText();
+						s.setKEY(key);
 						
-						label.setForeground(Color.RED);
-					}
+						s.Decode();
+						textArea_1.setText(s.getPlainText());
+						
+						}else {
+							
+							label.setForeground(Color.RED);
+						}
+				}else if (s.getAlgorithm().equals("1")) {
+					textArea_1.setText(s.getPlainText());
+				}*/
+				
+				
+				textArea_1.setText(s.getPlainText());
+				
 				
 				
 			}
