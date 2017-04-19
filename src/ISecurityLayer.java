@@ -1,4 +1,4 @@
-package cs685;
+package cs685project;
 
 import java.security.*;
 import javax.crypto.*;
@@ -26,19 +26,19 @@ public interface ISecurityLayer {
     * @return ciphertext resulting from the encryption. Will be Null if encryption failed. 
     * @author James
     */    
-    public String DigitalSign(String Message);  
+    public byte[] DigitalSign(String Message);  
     
     /**
     * @return plaintext resulting from the decryption. Will be Null if encryption failed. 
     * @author James
     */
-    public String VerifySign(String Message, String theirPublicKey);
+    public String VerifySign(byte[] Message);
 
     /**
     * @return hash resulting from the decryption. Will be Null if hash failed. 
     * @author James
     */
-    public String HashWithSha1_256(String Message);
+    public String HashWithSha1_512(String Message);
     
     /**
     * @return true if hash of first parameter is equal to second parameter
@@ -46,6 +46,6 @@ public interface ISecurityLayer {
     * @param HashToCompare The hash sent with the message.
     * @author James
     */
-    public boolean VerifyHashSha1_256(String MessageToCheck, String HashToCompare);
+    public boolean VerifyHashSha1_512(String MessageToCheck, String HashToCompare);
     
 }
