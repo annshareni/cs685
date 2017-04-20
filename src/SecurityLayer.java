@@ -1,4 +1,5 @@
-package cs685;
+
+package cs685project;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
@@ -126,7 +127,7 @@ public class SecurityLayer implements ISecurityLayer{
     }    
     
     
-    private void initialtizeRSAKeys()
+    private void initialtizeKeys()
     {
         //Snippet mostly provided by Daniel Davis
         try 
@@ -153,11 +154,15 @@ public class SecurityLayer implements ISecurityLayer{
             
             
             
-            System.out.println("e = Public Key Exponent : " + rsaPubKeySpec.getPublicExponent() + "\n");
+            //System.out.println("e = Public Key Exponent : " + rsaPubKeySpec.getPublicExponent() + "\n");
             //System.out.println("d = Private Key Exponent : " + rsaPrivKeySpec.getPrivateExponent() + "\n");
             //System.out.println("n = Modulus : " + rsaPubKeySpec.getModulus() + "\n");
             
             cipher = Cipher.getInstance("RSA");
+            
+            
+            KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacMD5");
+            MacKey = keyGenerator.generateKey();
         } 
         catch (InvalidKeySpecException | NoSuchPaddingException | NoSuchAlgorithmException ex)
         {
@@ -225,7 +230,7 @@ public class SecurityLayer implements ISecurityLayer{
     
     
     public SecurityLayer() {
-        initialtizeRSAKeys();
+        initialtizeKeys();
     }
 
     
@@ -284,7 +289,37 @@ public class SecurityLayer implements ISecurityLayer{
     }
     
     
-//##################  Unverified Block ###############################################################      
+    public String MacWithMD5(String Message)
+    {
+        try
+        {
+            Mac mac = Mac.getInstance("HmacMD5");
+            mac.init(MacKey);
+            byte[] result = mac.doFinal(Message.getBytes("UTF-8"));
+            
+            //System.out.println("Message Authentication Code : " + java.util.Base64.getEncoder().encodeToString(result));
+            
+            return new String(result, "utf-8");//java.util.Base64.getEncoder().encodeToString(result);
+        
+        } 
+        catch (NoSuchAlgorithmException | InvalidKeyException | IllegalStateException e) 
+        {
+            System.err.println("Error in Message Authentication Codes! " + e.getMessage() + "!");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(SecurityLayer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
+    
+    public boolean VerifyMacMd5(String Message, String Mack)
+    {
+        String mackthing = MacWithMD5(Message);
+        return mackthing.equals(Mack);
+    }
+
+    
     @Override
     public byte[] DigitalSign(String Message) 
     {
@@ -301,7 +336,7 @@ public class SecurityLayer implements ISecurityLayer{
             shawithrsa.update(Message.getBytes("UTF-8"));
             sign = shawithrsa.sign();
             
-            System.out.println("sign inside digitalSig: "+new String(sign, "utf-8"));
+            //System.out.println("sign inside digitalSig: "+new String(sign, "utf-8"));
             
 
             
@@ -316,8 +351,10 @@ public class SecurityLayer implements ISecurityLayer{
 
         return null;
     }
-
     
+    
+    
+//##################  Unverified Block ###############################################################      
     @Override
     public String VerifySign(byte[] Message) 
     {
@@ -353,37 +390,6 @@ public class SecurityLayer implements ISecurityLayer{
     }  
     
     
-    public String MacWithMD5(String Message)
-    {
-        try
-        {
-            KeyGenerator keyGenerator = KeyGenerator.getInstance("HmacMD5");
-            MacKey = keyGenerator.generateKey();
-            
-            Mac mac = Mac.getInstance("HmacMD5");
-            mac.init(MacKey);
-            byte[] result = mac.doFinal(Message.getBytes("UTF-8"));
-            
-            //System.out.println("Message Authentication Code : " + java.util.Base64.getEncoder().encodeToString(result));
-            
-            return java.util.Base64.getEncoder().encodeToString(result);
-        
-        } 
-        catch (NoSuchAlgorithmException | InvalidKeyException | IllegalStateException e) 
-        {
-            System.err.println("Error in Message Authentication Codes! " + e.getMessage() + "!");
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(SecurityLayer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return null;
-    }
-    
-    
-    public boolean VerifyMacMd5(String Message, String Mac)
-    {
-        return false;
-    }
+
     
 }
-
