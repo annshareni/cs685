@@ -1,6 +1,9 @@
 
 
-
+/*
+ * @author Rui Wang
+ * application layer
+ * */
 
 import java.awt.EventQueue;
 

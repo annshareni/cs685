@@ -1,4 +1,7 @@
-
+/*
+ * @author Rui Wang
+ * server side of socket
+ * */
 
 import java.io.*;
 import java.net.*;
@@ -11,10 +14,10 @@ public class Provider{
     ObjectInputStream in;
     String message;
     String handshake;
-    JTextField txtNew;
+    static JTextField txtNew;
     
     //Socket clientSocket;
-	symm s;
+	static symm s;
     
     
     Provider(symm sObj, JTextField txtNew){
@@ -95,10 +98,10 @@ public class Provider{
     
     /*public static void main(String args[])
     {
-        Provider server = new Provider();
+        Provider server = new Provider(s, txtNew);
         while(true){
             server.run();
         }
-    }
-    */
+    }*/
+    
 }
