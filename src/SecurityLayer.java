@@ -1,5 +1,5 @@
 
-package cs685project;
+package cs685;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
